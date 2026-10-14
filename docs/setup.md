@@ -1,0 +1,34 @@
+# Setup
+
+## Per repository (shared with your team)
+
+1. In your repo root, create `.github/` if it doesn't exist. If it already exists, merge into it; don't overwrite.
+2. Copy `agents/`, `instructions/`, `prompts/`, and `skills/` into `.github/`.
+3. Copy `templates/copilot-instructions.md` to `.github/copilot-instructions.md` and fill in the bracketed lines.
+4. Reload the IDE.
+
+## Global (every repo on your machine)
+
+GitHub Copilot has no account-level cloud sync for these files on an individual plan.
+
+1. In the Copilot Chat panel, open the gear icon, then Customizations.
+2. Set the scope of each item to Personal instead of Workspace. Menu names can vary by plugin version.
+3. The panel shows the Personal folder path. Keep that folder in a private git repo and clone it on each machine.
+
+## Verify
+
+- Customizations lists 4 skills, 2 agents, and 6 prompts.
+- Ask for a small function in a code file. The answer should be minimal and follow `code-economy`.
+- Run `/architecture-diagram`. You should get one Mermaid block.
+- Pick the SDET Engineer agent and ask for a small test. Pick QA Engineer and ask for test cases.
+
+## Troubleshooting
+
+| Symptom | Likely cause | Fix |
+|---|---|---|
+| Nothing appears | Wrong folder path | Files must be under `.github/agents`, `.github/skills/<name>/SKILL.md`, and so on |
+| Items still missing | Stale index | Reload the IDE or reopen the project |
+| Skill never triggers | Description too vague | Mention the skill by name in your prompt, or sharpen its `description` |
+| Two skills load for one request | Overlapping descriptions | Narrow the `description` fields |
+| Prompts don't autocomplete | Prompt files not picked up | Check the prompts folder path and your IDE's prompt-file setting |
+| ponytail lines do nothing | Plugin not installed | Install ponytail, or ignore; the fallback rule applies |
