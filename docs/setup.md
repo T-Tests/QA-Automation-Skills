@@ -11,8 +11,8 @@
 
 GitHub Copilot has no account-level cloud sync for these files on an individual plan.
 
-1. In the Copilot Chat panel, open the gear icon, then Customizations.
-2. Set the scope of each item to Personal instead of Workspace. Menu names can vary by plugin version.
+1. In the (JetBrains IDEA)IDE tools menu , open the Github Copilot sub menu, then Customizations.
+2. Add the folder path or git repo url under file location for Instructions, Prompts, Agents, Skills, Set the scope of each item to Personal instead of Workspace. Menu names can vary.
 3. The panel shows the Personal folder path. Keep that folder in a private git repo and clone it on each machine.
 
 ## Verify
