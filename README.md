@@ -10,14 +10,16 @@ skills/
   defect-analysis/        Triage a bug or failure in two gated phases
   test-automation/        Write UI, API, mobile, and performance tests
   code-review/            Review a diff for correctness, security, and invented APIs
+  project-mentor/         Mentor-style mock interview about a project
 agents/
   qa-engineer.agent.md    Analysis and test design, no code changes
   sdet-engineer.agent.md  Automation work, verified with targeted runs
+  project-mentor.agent.md Interviews and coaches you on a project, no code changes
 instructions/             Scoped by file type
   code-economy            Minimal code, existing conventions, lint and tests before "done"
   code-safety             Security, dependency, and accuracy rules
   concise-docs            Short, verified documentation
-prompts/                  Six slash commands (see below)
+prompts/                  Seven slash commands (see below)
 templates/copilot-instructions.md   Short always-on repo instructions
 docs/setup.md             Setup, global use, troubleshooting
 AGENTS.md                 Contributor rules
@@ -41,10 +43,11 @@ Global setup, verification, and troubleshooting: [docs/setup.md](docs/setup.md).
 | `/review-test-cases` | Find coverage gaps, duplicates, and unclear steps |
 | `/convert-to-automation` | Turn manual cases into automation using your framework |
 | `/architecture-diagram` | Draw the codebase as a Mermaid diagram |
+| `/mentor-interview` | Start a mentor-style mock interview about the open project |
 
 Example: `/create-test-cases Users reset their password with an emailed link that expires after 15 minutes.`
 
-- **Agents:** pick QA Engineer for requirements, defects, and test design. Pick SDET Engineer for writing and fixing automation.
+- **Agents:** pick QA Engineer for requirements, defects, and test design; SDET Engineer for writing and fixing automation; or Project Mentor to be interviewed and coached on a project. Send `Start` to begin, or add settings such as `mid exam` or `junior src/tests flaky tests`.
 - **Skills:** load when their description matches your request. Name the skill in your prompt if one doesn't trigger.
 - **Instructions:** `concise-docs` applies to Markdown files. `code-economy` and `code-safety` apply to `.js .ts .jsx .tsx .py .java .kt .cs .go .rb` files.
 

@@ -17,10 +17,11 @@ GitHub Copilot has no account-level cloud sync for these files on an individual 
 
 ## Verify
 
-- Customizations lists 4 skills, 2 agents, and 6 prompts.
+- Customizations lists 5 skills, 3 agents, and 7 prompts.
 - Ask for a small function in a code file. The answer should be minimal and follow `code-economy`.
 - Run `/architecture-diagram`. You should get one Mermaid block.
 - Pick the SDET Engineer agent and ask for a small test. Pick QA Engineer and ask for test cases.
+- Pick the Project Mentor agent and send `Start`, or run `/mentor-interview`. You should get one opening line and one question about your code.
 
 ## Troubleshooting
 
