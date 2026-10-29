@@ -47,9 +47,31 @@ Global setup, verification, and troubleshooting: [docs/setup.md](docs/setup.md).
 
 Example: `/create-test-cases Users reset their password with an emailed link that expires after 15 minutes.`
 
-- **Agents:** pick QA Engineer for requirements, defects, and test design; SDET Engineer for writing and fixing automation; or Project Mentor to be interviewed and coached on a project. Send `Start` to begin, or add settings such as `mid exam` or `junior src/tests flaky tests`.
-- **Skills:** load when their description matches your request. Name the skill in your prompt if one doesn't trigger.
-- **Instructions:** `concise-docs` applies to Markdown files. `code-economy` and `code-safety` apply to `.js .ts .jsx .tsx .py .java .kt .cs .go .rb` files.
+### Invoke an agent
+
+1. Open Copilot Chat (VS Code: `Ctrl+Alt+I`; JetBrains: the GitHub Copilot tool window).
+2. Open the agent picker (the mode dropdown next to the chat input) and select the agent. Names appear as the `name` in each file. Don't see it? Reload the IDE and check `.github/agents/`.
+3. Type your request and send it.
+
+| Agent (picker name) | Pick it for | Example message |
+|---|---|---|
+| QA Engineer | Requirements, defects, test design. Doesn't change code. | `Design test cases for the login lockout after 5 failed attempts.` |
+| SDET Engineer | Writing, fixing, and reviewing automation. Runs targeted tests. | `Automate TC-12 using our existing page objects.` |
+| Project Mentor | Mock interview about your project. Doesn't change code. | `Start`, `mid exam`, or `junior src/tests flaky tests` |
+
+Project Mentor settings (all optional, any order): level `junior` (default), `mid`, `senior`; mode `coach` (default) or `exam`; scope a path or `changes`; plus a focus theme. In a session, type `hint`, `skip`, `retry`, `teach me`, `harder`, `easier`, `focus on X`, `mode coach|exam`, or `end session` for the summary.
+
+### Invoke a prompt
+
+Type `/` in Copilot Chat, pick the command, then add your input on the same line, for example `/analyze-bug Checkout returns 500 when the cart has one item.` For `/mentor-interview mid exam src/tests`, select the Project Mentor agent first.
+
+### Invoke a skill
+
+Skills load on their own when your request matches their description. To force one, name it in the message: `Use the code-review skill on my current changes.` Skills: `test-design`, `defect-analysis`, `test-automation`, `code-review`, `project-mentor`.
+
+### Instructions
+
+`concise-docs` applies to Markdown files. `code-economy` and `code-safety` apply to `.js .ts .jsx .tsx .py .java .kt .cs .go .rb` files. They load automatically; nothing to invoke.
 
 ## Use with other tools
 
