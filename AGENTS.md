@@ -21,4 +21,7 @@ This repo is a catalog of Markdown files. There is no build, lint, or test syste
 - Keep always-on text (the copilot-instructions template) minimal. Put detail in skills, which load on demand.
 - Don't duplicate rules across files. Link or reference by name.
 - No secrets, tokens, or internal URLs.
-- Third-party skills (such as ponytail) are optional and referenced by name only; never copy their content here.
+- Third-party skills (such as ponytail) are optional and referenced by name only; never copy their content here. Scan any third-party skill with SkillSpector before referencing it.
+- Each skill states its environment tier in a `compatibility:` frontmatter line (`Works in plain chat with pasted input.`, `Needs read access to the project files.`, or `Needs project files and a shell to run tests.`). If a target tool ignores this key, place the same line as the first body line.
+- Each non-`chat` skill opens with a capability check: if the environment lacks what it needs, state that in one line, name the chat-safe alternative, and ask for pasted input.
+- Exception to the no-duplication rule: `chat/qa-assistant.md` is a hand-maintained condensed copy of all chat-tier skills. Its header names the source skills so they are updated together.

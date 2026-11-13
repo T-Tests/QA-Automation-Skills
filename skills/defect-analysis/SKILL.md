@@ -1,9 +1,12 @@
 ---
 name: defect-analysis
 description: 'Analyze a bug report or failing test: reproduction, root cause, severity, regression risk. Use when asked to triage, debug, investigate, explain, or fix a failure, flaky test, error, or stack trace.'
+compatibility: 'Works in plain chat with pasted input. With file access, can read code and logs directly.'
 ---
 
 # Defect Analysis
+
+Follow the role and platform settings. If unset, default to engineer and detect the platform.
 
 Two phases. Do not skip Phase 1.
 
@@ -14,6 +17,7 @@ Two phases. Do not skip Phase 1.
 3. Read the smallest relevant code path. Trace inputs to the first incorrect state or value, using logs, stack traces, screenshots, page source, or test output as evidence. Redact secrets, tokens, and personal data before quoting any of it.
 4. Identify affected platforms and configurations, related functionality, regression risk, and missing coverage.
 5. Present findings. Cite the evidence behind each conclusion (log line, file and line, screenshot, output). Label each statement Fact, Hypothesis, or Assumption. Give a confidence level: high, medium, or low.
+6. Independent verification: run a second pass attempting to disprove each finding. Mark each as `confirmed` (assign severity: blocker, major, minor), `needs validation` (name the exact missing fact), or `rejected`. Keep hardening suggestions separate from confirmed defects.
 
 **Stop after Phase 1.** Do not propose or apply a fix in the same response; wait for confirmation. Exception: the user explicitly asked for the fix in the same request.
 
@@ -23,4 +27,8 @@ Two phases. Do not skip Phase 1.
 - Add a regression test when practical.
 - Never fix by weakening an assertion, adding a hard wait, or suppressing an exception.
 
-If the evidence is insufficient, say so and ask for the missing artifact (log, page source, reproduction). Never state a root cause as fact without evidence, and don't describe library or framework behavior from memory; check the code or docs.
+## Platform specifics
+- Mobile: inspect OS version, build variant, memory pressure, background state, ANR traces, device logs.
+- Web: inspect browser/engine version, console errors, network payload failures, viewport responsiveness.
+
+If evidence is insufficient, say so and ask for the missing artifact. Never state root cause without evidence.
