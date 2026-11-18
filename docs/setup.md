@@ -48,40 +48,65 @@ For browser-based or standalone chat windows without repository access.
   - `skills/qa-metrics/SKILL.md`
   - `skills/api-testing/SKILL.md` (for scenario design only)
 
-## Claude Code setup
+## Tool-specific setup guides
 
-Claude Code uses `.claude/` instead of `.github/`. Use these commands to install:
-
+### Claude Code
+`CLAUDE.md` is provided at the repository root and is auto-detected on startup. To install full agent and rule subdirectories:
 ```bash
-# 1. Create directories
+# Optional: create specialized .claude directories
 mkdir -p .claude/skills .claude/agents .claude/commands .claude/rules
-
-# 2. Copy skills
 cp -r skills/* .claude/skills/
-
-# 3. Copy agents (rename .agent.md to .md)
-for f in agents/*.agent.md; do
-  cp "$f" ".claude/agents/$(basename "$f" .agent.md).md"
-done
-
-# 4. Copy prompts as commands (drop .prompt from filename)
-for f in prompts/*.prompt.md; do
-  cp "$f" ".claude/commands/$(basename "$f" .prompt.md).md"
-done
-
-# 5. Copy instructions as rules (convert applyTo to paths)
-for f in instructions/*.instructions.md; do
-  sed 's/^applyTo:/paths:/' "$f" > ".claude/rules/$(basename "$f" .instructions.md).md"
-done
-
-# 6. Always-on instructions
-cp templates/copilot-instructions.md CLAUDE.md
+for f in agents/*.agent.md; do cp "$f" ".claude/agents/$(basename "$f" .agent.md).md"; done
+for f in prompts/*.prompt.md; do cp "$f" ".claude/commands/$(basename "$f" .prompt.md).md"; done
+for f in instructions/*.instructions.md; do sed 's/^applyTo:/paths:/' "$f" > ".claude/rules/$(basename "$f" .instructions.md).md"; done
 ```
 
-Notes for Claude Code:
-- Rules in `.claude/rules/` require a `paths:` glob list; `applyTo:` is ignored.
-- `AGENTS.md` is read automatically when no `CLAUDE.md` exists (version 2.1.277+).
-- Run with `--agent lead` or set `"agent": "lead"` in settings to use Lead coordinator mode.
+### Cursor
+Zero-config: `.cursorrules` and `.cursor/rules/qa-automation.mdc` are already present in the repository root. Cursor will automatically apply QA rules, settings, agent definitions, and skills for all composer and chat prompts.
+
+### Cline
+Zero-config: `.clinerules` is located at the workspace root and automatically injected as system instructions for all Cline conversations in VS Code.
+
+### OpenAI Codex & OpenCode
+Zero-config: `CODEX.md`, `.opencode.md`, and the universal `AGENTS.md` are situated at the workspace root and automatically read by these CLI coding agents.
+
+### Windsurf
+Zero-config: `.windsurfrules` is placed at the workspace root and automatically loaded into Windsurf Cascade.
+
+### GitHub Copilot
+Pre-configured: `.github/copilot-instructions.md` is active at `.github/copilot-instructions.md`.
+
+## Mandatory tooling setup
+
+This package mandates **Ponytail** and **RTK** to ensure optimal token efficiency and minimal code footprint.
+
+### 1. Ponytail (Mandatory)
+Ponytail enforces strict code economy and debt tracking.
+- Install the `ponytail` skill into your agent or IDE skills directory:
+  ```bash
+  # For GitHub Copilot:
+  # Clone or copy ponytail into .github/skills/ponytail/
+  git clone https://github.com/DietrichGebert/ponytail.git .github/skills/ponytail
+  
+  # For Claude Code:
+  git clone https://github.com/DietrichGebert/ponytail.git .claude/skills/ponytail
+  ```
+- All test automation generation must invoke `ponytail`.
+- Code reviews must run `ponytail-review`.
+
+### 2. RTK (Mandatory)
+RTK compresses test runner logs and terminal output before sending to context.
+- Install the RTK CLI globally:
+  ```bash
+  npm install -g @rtk-ai/rtk
+  # or download prebuilt binary from https://github.com/rtk-ai/rtk/releases
+  ```
+- Wrap all test runs and terminal commands with `rtk`:
+  ```bash
+  rtk npm test
+  rtk pytest
+  rtk run <command>
+  ```
 
 ## Model-tier recommendations
 
@@ -107,5 +132,6 @@ Selecting the right model tier per task controls token cost while preserving qua
 | Skill never triggers | Description too vague | Mention the skill by name in your prompt, or sharpen its `description` |
 | Two skills load for one request | Overlapping descriptions | Narrow the `description` fields |
 | Prompts don't autocomplete | Prompt files not picked up | Check the prompts folder path and your IDE's prompt-file setting |
-| ponytail lines do nothing | Plugin not installed | Install ponytail, or ignore; the fallback rule applies |
+| ponytail lines do nothing | Skill not installed | Install ponytail into `.github/skills/ponytail` or `.claude/skills/ponytail` (see Mandatory tooling setup) |
+| RTK command not found | RTK CLI not installed | Install globally: `npm i -g @rtk-ai/rtk` or download prebuilt binary |
 | Subagents fail in JetBrains | Preview feature limitations | Subagent coordination in JetBrains Copilot is UNVERIFIED; invoke agents directly |

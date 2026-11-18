@@ -13,10 +13,10 @@ Review against the requirement first, then in this order: correctness, behaviora
 ## Checks
 - **Security:** hardcoded secrets; injection (SQL, shell, eval); missing authentication/authorization; unvalidated input; disabled TLS verification; sensitive data in logs/errors; unsafe deserialization.
 - **Hallucination:** confirm every function, API, flag, and package the diff uses exists in the project or documented version. Flag any unverified new dependency.
-- **Quality:** conventions followed; no dead code or swallowed errors; linter and tests reported.
+- **Quality:** conventions followed; no dead code or swallowed errors; linter and tests reported (execute via `rtk`).
 - **Assumptions:** list any the author made without evidence.
 
-If the ponytail-review skill is available, run it on the diff to catch over-engineering.
+Mandatory review pass: run `ponytail-review` on the diff to catch over-engineering, unnecessary abstractions, and code bloat.
 
 ## Verification
 Run a second pass attempting to disprove each finding. Mark each as `confirmed` (assign severity: blocker, major, minor), `needs validation` (name the exact missing fact), or `rejected`. Keep hardening suggestions separate from confirmed defects.

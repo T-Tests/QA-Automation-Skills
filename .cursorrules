@@ -1,0 +1,52 @@
+# QA Agent Skills — Cursor Rules
+
+## Settings
+- `role`: fresher | engineer | lead | manager (default: engineer). Fresher: explain terms and why, add a learning note. Engineer: terse artifact. Lead: risk, scope, decision. Manager: one-page summary first, decision needed, numbers only from supplied data.
+- `platform`: mobile | web | both (default: detect from the project or ask once).
+- Brevity: lead with the conclusion or decision needed, then detail. No greetings or recaps.
+
+## Working rules
+- Follow the role and platform settings above. If unset, default to `engineer` and detect the platform.
+- Be concise. Give the smallest response that fully answers the request.
+- Mandate ponytail: for any code generation, edit, or refactor, invoke the mandatory ponytail skill. For reviews, invoke ponytail-review.
+- Mandate RTK: always execute test runs, linters, and terminal commands through `rtk` (e.g. `rtk test`, `rtk run <cmd>`) to compress output and reduce context token bloat. Never feed raw uncompressed terminal output.
+- Don't guess. Verify APIs, flags, versions, and file paths in the code or docs, or say you don't know. Never invent them.
+- State what you verified (tests run via rtk, code read) versus what you assume. Don't claim untested code works.
+- Docs: 1-3 sentences of what and why. Prefer tables or bullets over paragraphs.
+
+## Agents (invoke by name)
+- **Lead**: QA coordinator; routes to QA Engineer, SDET Engineer, Code Scout. See `agents/lead.agent.md`.
+- **QA Engineer**: Requirements, test design, data, strategy, release. See `agents/qa-engineer.agent.md`.
+- **SDET Engineer**: Test automation, API, flaky triage, code review. See `agents/sdet-engineer.agent.md`.
+- **Code Scout**: Read-only verification. See `agents/code-scout.agent.md`.
+- **Project Mentor**: Mock interview coaching. See `agents/project-mentor.agent.md`.
+
+## Skills (read the SKILL.md files for detailed playbooks)
+- `skills/test-design/SKILL.md` — Design test cases and regression scope (chat tier)
+- `skills/test-strategy/SKILL.md` — Scope, risk analysis, resource plans (chat tier)
+- `skills/test-data/SKILL.md` — Synthetic datasets, boundary fixtures (chat tier)
+- `skills/defect-analysis/SKILL.md` — Two-phase gated triage with verification (chat/files tier)
+- `skills/code-review/SKILL.md` — Requirement-first review, security, hallucination checks (chat/files tier)
+- `skills/release-readiness/SKILL.md` — Data-backed release go/no-go (chat tier)
+- `skills/qa-metrics/SKILL.md` — Defect leakage, quality trends, dashboards (chat tier)
+- `skills/project-mentor/SKILL.md` — Interactive codebase mock interview (files tier)
+- `skills/api-testing/SKILL.md` — API scenario design and execution (chat/run tier)
+- `skills/test-automation/SKILL.md` — UI, mobile, API test generation (run tier)
+- `skills/flaky-triage/SKILL.md` — Race conditions and flaky test remediation (run tier)
+
+## Commands
+- `/create-test-cases` — Read `prompts/create-test-cases.prompt.md`
+- `/analyze-bug` — Read `prompts/analyze-bug.prompt.md`
+- `/regression-scope` — Read `prompts/regression-scope.prompt.md`
+- `/review-test-cases` — Read `prompts/review-test-cases.prompt.md`
+- `/convert-to-automation` — Read `prompts/convert-to-automation.prompt.md`
+- `/architecture-diagram` — Read `prompts/architecture-diagram.prompt.md`
+- `/mentor-interview` — Read `prompts/mentor-interview.prompt.md`
+
+## Safety
+- Never hardcode secrets, tokens, or keys.
+- Validate external input. Use parameterized queries.
+- Never disable TLS/cert verification.
+- Use synthetic test data only.
+- Before adding a dependency, verify it exists in the official registry.
+- Use only APIs and flags seen in code or docs. Never invent them.

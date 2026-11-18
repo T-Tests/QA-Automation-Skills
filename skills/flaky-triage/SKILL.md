@@ -22,7 +22,8 @@ Inspect project files to detect the test runner and framework; never assume one.
 - Never fix with hard sleeps (`Thread.sleep`, `time.sleep`). Replace with condition-based explicit polling.
 - Never fix by adding test-level retries without addressing the underlying race condition. Retries hide defects.
 - Isolate test data: use unique UUID-stamped synthetic data per test run.
-- Evidence before done: run the test repeatedly (e.g. 5-10 iterations) and display execution output proving zero failures. If unable to run, state "not run".
+- Mandate RTK: execute repeated test triage runs through `rtk` (e.g. `rtk npm test`, `rtk pytest`) to compress output and reduce token context.
+- Evidence before done: run the test repeatedly (e.g. 5-10 iterations) through `rtk` and display compressed execution output proving zero failures. If unable to run, state "not run".
 
 ## Platform specifics
 - Mobile: Appium driver synchronization, Espresso idling resources, device animations enabled on emulator, keyboard dismissal latency.

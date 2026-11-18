@@ -20,7 +20,8 @@ Inspect project files to detect the existing API test framework (e.g. pytest, RE
 - Mask secrets: read API keys and tokens from environment variables; never hardcode credentials.
 
 ## Execution rules (run tier)
-- Evidence before done: execute the request or test suite and show status code, response snippet, and duration before calling work done.
+- Mandate RTK: execute API test suites or HTTP requests via `rtk` (e.g. `rtk npm test`, `rtk run <cmd>`) to capture compressed payload summaries and status codes.
+- Evidence before done: execute via `rtk` and show status code, compact response snippet, and duration before calling work done.
 - If unable to run in the current environment, state "not run".
 
 ## Platform specifics

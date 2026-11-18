@@ -1,0 +1,56 @@
+# QA Agent Skills — Windsurf Rules
+
+This repository is a catalog of Markdown-based QA skills, agents, prompts, and instructions for AI coding assistants.
+
+## Settings
+- `role`: fresher | engineer | lead | manager (default: engineer). Fresher: explain terms and why, add a learning note. Engineer: terse artifact. Lead: risk, scope, decision. Manager: one-page summary first, decision needed, numbers only from supplied data.
+- `platform`: mobile | web | both (default: detect from the project or ask once).
+- Brevity: lead with the conclusion or decision needed, then detail. No greetings or recaps.
+
+## Working rules
+- Follow the role and platform settings above. If unset, default to `engineer` and detect the platform.
+- Be concise. Give the smallest response that fully answers the request.
+- Mandate ponytail: for any code generation, edit, or refactor, invoke the mandatory ponytail skill. For reviews, invoke ponytail-review.
+- Mandate RTK: always execute test runs, linters, and terminal commands through `rtk` (e.g. `rtk test`, `rtk run <cmd>`) to compress output and reduce context token bloat. Never feed raw uncompressed terminal output.
+- Don't guess. Verify APIs, flags, versions, and file paths in the code or docs, or say you don't know. Never invent them.
+- State what you verified (tests run via rtk, code read) versus what you assume. Don't claim untested code works.
+- Docs: 1-3 sentences of what and why. Prefer tables or bullets over paragraphs.
+
+## Agents
+Read the agent file for full constitution and routing rules:
+- `agents/lead.agent.md` — QA coordinator; routes to specialists, filters by tier
+- `agents/qa-engineer.agent.md` — Requirements, test design, data, strategy, release
+- `agents/sdet-engineer.agent.md` — Test automation, API testing, flaky triage, code review
+- `agents/code-scout.agent.md` — Read-only verification and code exploration
+- `agents/project-mentor.agent.md` — Interactive mock interview coaching
+
+## Skills
+Read the SKILL.md for the detailed playbook:
+- `skills/test-design/SKILL.md` — Design test cases and regression scope
+- `skills/test-strategy/SKILL.md` — Scope, risk analysis, resource plans
+- `skills/test-data/SKILL.md` — Synthetic datasets, boundary fixtures
+- `skills/defect-analysis/SKILL.md` — Two-phase gated triage with verification
+- `skills/code-review/SKILL.md` — Requirement-first review, security, hallucination checks
+- `skills/release-readiness/SKILL.md` — Data-backed release go/no-go
+- `skills/qa-metrics/SKILL.md` — Defect leakage, quality trends, dashboards
+- `skills/project-mentor/SKILL.md` — Interactive codebase mock interview
+- `skills/api-testing/SKILL.md` — API scenario design and execution
+- `skills/test-automation/SKILL.md` — UI, mobile, API test generation
+- `skills/flaky-triage/SKILL.md` — Race conditions and flaky test remediation
+
+## Commands
+- `/create-test-cases` — `prompts/create-test-cases.prompt.md`
+- `/analyze-bug` — `prompts/analyze-bug.prompt.md`
+- `/regression-scope` — `prompts/regression-scope.prompt.md`
+- `/review-test-cases` — `prompts/review-test-cases.prompt.md`
+- `/convert-to-automation` — `prompts/convert-to-automation.prompt.md`
+- `/architecture-diagram` — `prompts/architecture-diagram.prompt.md`
+- `/mentor-interview` — `prompts/mentor-interview.prompt.md`
+
+## Safety
+- Never hardcode secrets, tokens, or keys.
+- Validate external input. Use parameterized queries.
+- Never disable TLS/cert verification.
+- Use synthetic test data only.
+- Before adding a dependency, verify it exists in the official registry.
+- Use only APIs and flags seen in code or docs. Never invent them.

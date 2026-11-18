@@ -12,7 +12,7 @@ Follow the role and platform settings. If unset, default to engineer and detect 
 
 **Before writing:** inspect project files to detect the framework in use (for example Appium, XCUITest, Espresso, Playwright, Selenium, Cypress); never assume one. Reuse its existing utilities, page or screen objects, naming, and reporting. Don't duplicate selectors or helpers. Automate only stable scenarios with real maintenance value.
 
-**Writing the code:** if the ponytail skill is available, invoke it. Otherwise write the smallest correct implementation: built-ins first, no speculative abstraction, no new dependency without a verified reason.
+**Writing the code:** mandate ponytail: invoke the ponytail skill for all code generation and edits. Never write code without ponytail's economy constraints. Built-ins first, no speculative abstraction, and no new dependency without a verified reason.
 
 ## Rules
 - Never invent locators, IDs, endpoints, expected values, or test data. Use marked placeholders (such as `TODO_FILL_FROM_SOURCE`) and ask for real values. Never use empty strings for selectors.
@@ -21,8 +21,9 @@ Follow the role and platform settings. If unset, default to engineer and detect 
 - Read secrets from environment variables and mask them in logs. Never disable TLS verification.
 - Failures must report what failed, where, and expected versus actual.
 - Never weaken an assertion or add a sleep to make a test pass.
-- Evidence before done: show test or lint execution output before reporting work complete. If unable to run, state "not run".
-- One case per pass: write one test, run it, report the result, then proceed. Do not batch or loop script.
+- Mandate RTK: execute test or lint commands through `rtk` (e.g. `rtk npm test`, `rtk pytest`, `rtk run <cmd>`) to compress output before reading into context.
+- Evidence before done: show compressed test or lint execution output from `rtk` before reporting work complete. If unable to run, state "not run".
+- One case per pass: write one test, run it with `rtk`, report the result, then proceed. Do not batch or loop script.
 
 ## Platform specifics
 - Mobile: device and OS matrix, permissions, interruptions (calls, notifications), background and foreground, offline and weak network, deep links, build variants.

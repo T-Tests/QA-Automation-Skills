@@ -32,9 +32,16 @@ instructions/
 prompts/                  Seven slash commands for test workflows
 templates/copilot-instructions.md   Always-on repo instructions with role & platform settings
 docs/
-  setup.md                Three install routes (IDE, files, chat), Claude Code, and model-tier guide
+  setup.md                Setup guides for Copilot, Claude Code, Cursor, Cline, OpenCode, Codex, Windsurf
   evals.md                Evaluation rubric, 8 benchmark QA tasks, and token measurement tracking
-AGENTS.md                 Contributor rules and strict quality constraints
+AGENTS.md                 Operational system prompt (Codex, OpenCode, Gemini, etc.)
+CONTRIBUTING.md           Contributor rules and strict quality constraints
+CLAUDE.md                 Claude & Claude Code project instructions
+.cursorrules              Cursor AI rules (root and .cursor/rules/)
+.clinerules               Cline rules for VS Code
+.opencode.md              OpenCode CLI instructions
+.windsurfrules            Windsurf IDE rules
+.github/                  Pre-configured Copilot instructions
 ```
 
 ## Settings every output obeys
@@ -62,15 +69,29 @@ Skills state their environment tier via the `compatibility:` frontmatter line. I
 | `test-automation` | `run` | SDET | Framework-native tests; evidence before done; one case per pass |
 | `flaky-triage` | `run` (chat variant) | SDET | Race conditions, synchronization, state pollution isolation |
 
+## Supported AI tools & IDEs
+
+| Tool | Integration File | How It Loads |
+|---|---|---|
+| **Claude / Claude Code** | `CLAUDE.md` | Auto-detected at workspace root |
+| **Cursor** | `.cursorrules` & `.cursor/rules/qa-automation.mdc` | Auto-loaded for all queries |
+| **Cline** | `.clinerules` | Auto-loaded system instructions |
+| **OpenAI Codex** | `CODEX.md` / `AGENTS.md` | Auto-detected instructions |
+| **OpenCode** | `.opencode.md` / `AGENTS.md` | Auto-detected instructions |
+| **Windsurf** | `.windsurfrules` | Auto-loaded cascade rules |
+| **GitHub Copilot** | `.github/copilot-instructions.md` | Auto-loaded repo instructions |
+| **ChatGPT / Web Chat** | `chat/qa-assistant.md` | Copy & paste into any chat or custom instructions |
+| **JetBrains / VS Code / Neovim / Emacs** | Standard markdown & tool config files | Native file viewer & extension support |
+
 ## Quick start
 
 Choose the install route that matches your environment:
 
-1. **Full IDE route (`run` tier):** copy `agents/`, `instructions/`, `prompts/`, and `skills/` into your repo's `.github/` folder. Copy `templates/copilot-instructions.md` to `.github/copilot-instructions.md`.
-2. **Files-only route (`files` tier):** copy only read-safe skills (`test-design`, `test-strategy`, `test-data`, `defect-analysis`, `code-review`, `release-readiness`, `qa-metrics`, `project-mentor`) and read-only agents (`qa-engineer`, `code-scout`, `project-mentor`).
-3. **Chat route (`chat` tier):** paste `chat/qa-assistant.md` into your AI chat session, or paste individual chat skills directly.
+1. **Auto-detected route (Zero setup):** For Claude Code, Cursor, Cline, Windsurf, OpenCode, and Codex, all configuration files are already in place at the repo root. Simply open the workspace in your tool.
+2. **GitHub Copilot route:** `.github/copilot-instructions.md` is pre-configured. To use custom agents, prompts, and skills, link or copy `agents/`, `prompts/`, and `skills/` into `.github/`.
+3. **Chat route (`chat` tier):** paste `chat/qa-assistant.md` into your AI chat session (ChatGPT, Claude web, etc.), or paste individual chat skills directly.
 
-Detailed instructions for Claude Code and global IDE setups: [docs/setup.md](docs/setup.md).
+Detailed setup instructions: [docs/setup.md](docs/setup.md).
 
 ## Agents
 
@@ -98,12 +119,49 @@ Select an agent in your IDE's agent picker:
 
 ## How it saves tokens
 
+- **Mandatory Ponytail integration:** enforces the smallest correct implementation without boilerplate or speculative abstractions; catches over-engineering with `ponytail-review`.
+- **Mandatory RTK runner compression:** pipes all test execution, linter runs, and terminal output through `rtk` to compress log context before feeding AI models.
 - **Generate once, replay deterministically:** AI writes and debugs tests; CI executes them with zero token cost.
 - **One case per pass:** prevents massive speculative code generation loops that burn context.
 - **Strict brevity rules:** strips conversational fluff, pleasantries, and duplicated recaps.
 - **Scoped instructions:** file-type filtering prevents code rules from loading during doc turns.
 - **Model-tier advice:** guide developers to use lightweight models for mechanical tasks and frontier models for cognitive planning (see [docs/setup.md](docs/setup.md)).
 - **Measurable tracking:** verify savings using the 8 fixed benchmark tasks in [docs/evals.md](docs/evals.md).
+
+## Mandated & integrated tooling
+
+- **[Ponytail](https://github.com/DietrichGebert/ponytail) (Mandatory):** Enforces code economy, anti-bloat constraints, and technical debt tracking (`ponytail-debt`). Mandated for all code generation, edits, and code reviews (`ponytail-review`).
+- **[RTK](https://github.com/rtk-ai/rtk) (Mandatory):** CLI tool that shrinks and compresses terminal commands, test runner logs, and linter outputs before feeding into AI context. Mandated for all test execution and shell commands.
+
+### Security scanning with SkillSpector
+
+[SkillSpector](https://github.com/skillspector/skillspector) is a static security and permission scanner for agent skills, prompts, and instructions. Use it to audit any third-party, community, or newly authored skill before referencing or installing it:
+
+```bash
+# Install SkillSpector CLI globally
+npm install -g @skillspector/cli
+# or run directly with npx without installation:
+npx skillspector scan ./skills
+
+# Scan a single skill or agent definition
+skillspector scan skills/test-automation/SKILL.md
+skillspector scan agents/sdet-engineer.agent.md
+
+# Scan all skills, instructions, and agents across the repo
+skillspector scan skills/ instructions/ agents/
+
+# Strict mode: exit with non-zero code on security warnings or excessive tool requests
+skillspector scan --strict ./skills
+```
+
+**What it audits:**
+- **Prompt injections & jailbreaks:** hidden system overrides and malicious role prompts.
+- **Secret & credential harvesting:** attempts to read or log `.env`, SSH keys, or cloud tokens.
+- **Permission escalation:** skills requesting broad shell or edit capabilities when read-only suffices.
+- **Typosquatted dependencies:** unverified package recommendations.
+
+### Recommended optional tools (not bundled)
+- [tapflow](https://github.com/tapflow/tapflow): mobile simulator streaming and no-LLM flow runner (v0.x, experimental runner and MCP; iOS requires macOS and Xcode).
 
 ## Credits
 
@@ -117,12 +175,7 @@ Ideas only; all content written fresh without copying third-party text or code:
 - [snarktank/ralph](https://github.com/snarktank/ralph) and [frankbria/ralph-claude-code](https://github.com/frankbria/ralph-claude-code): one case per pass conversion loop.
 - [fugazi/test-automation-skills-agents](https://github.com/fugazi/test-automation-skills-agents) (MIT): folder layout, agent Constitution sections, WHAT + WHEN + KEYWORDS skill descriptions, and troubleshooting structure.
 - Sonu Gupta, "AI Agents for Appium: How I Built Guardrails That Actually Work" and [sonugupta029/appium-ai-agents](https://github.com/sonugupta029/appium-ai-agents): two-phase gated debugging, evidence citing, and never inventing locators.
-- [DietrichGebert/ponytail](https://github.com/DietrichGebert/ponytail): optional code-generation skill integration order.
-
-### Recommended optional tools (not bundled)
-- [tapflow](https://github.com/tapflow/tapflow): mobile simulator streaming and no-LLM flow runner (v0.x, experimental runner and MCP; iOS requires macOS and Xcode).
-- [RTK](https://github.com/rtk-ai/rtk): CLI tool that shrinks command and test runner output before feeding it to AI context.
-- [SkillSpector](https://github.com/skillspector/skillspector): static security and permission scanner for agent skills.
+- [DietrichGebert/ponytail](https://github.com/DietrichGebert/ponytail): code-generation skill integration order.
 
 ## License
 
